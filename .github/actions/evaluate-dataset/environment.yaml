@@ -1,0 +1,12 @@
+name: votenet_clean
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6.13
+  # - libxml2:i386
+  # - libstdc++6:i386
+  - cudatoolkit-dev
+  - pytorch==1.1.0
+  - torchvision==0.3.0
+  - cudatoolkit=10.0
+  - cudnn=7.6.0

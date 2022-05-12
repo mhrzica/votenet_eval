@@ -1,0 +1,28 @@
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Dataset evaluation
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Dataset evaluation
+        uses: ./.github/actions/evaluate-dataset/
+        id: hello
+        with:
+          who-to-greet: "Mateja"
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
+
+      # - name: Purge native Python
+      #   run: sudo apt-get purge --auto-remove python3.8
+
+      # - name: Check Python version
+      #   run: ls /usr/bin/python*
+
+      # - name: Install Python 3.6
+      #   run: add-apt-repository ppa:deadsnakes/ppa && apt-get update && apt-get install python3.6
