@@ -61,22 +61,22 @@ if FLAGS.use_cls_nms:
 # ------------------------------------------------------------------------- GLOBAL CONFIG BEG
 BATCH_SIZE = FLAGS.batch_size
 NUM_POINT = FLAGS.num_point
-DUMP_DIR = FLAGS.dump_dir
+# DUMP_DIR = FLAGS.dump_dir
 CHECKPOINT_PATH = FLAGS.checkpoint_path
 assert CHECKPOINT_PATH is not None
-FLAGS.DUMP_DIR = DUMP_DIR
+# FLAGS.DUMP_DIR = DUMP_DIR
 AP_IOU_THRESHOLDS = [float(x) for x in FLAGS.ap_iou_thresholds.split(",")]
 
 # Prepare DUMP_DIR
-if not os.path.exists(DUMP_DIR):
-    os.mkdir(DUMP_DIR)
-DUMP_FOUT = open(os.path.join(DUMP_DIR, "log_eval.txt"), "w")
-DUMP_FOUT.write(str(FLAGS) + "\n")
+# if not os.path.exists(DUMP_DIR):
+#     os.mkdir(DUMP_DIR)
+# DUMP_FOUT = open(os.path.join(DUMP_DIR, "log_eval.txt"), "w")
+# DUMP_FOUT.write(str(FLAGS) + "\n")
 
 
 def log_string(out_str):
-    DUMP_FOUT.write(out_str + "\n")
-    DUMP_FOUT.flush()
+    # DUMP_FOUT.write(out_str + "\n")
+    # DUMP_FOUT.flush()
     print(out_str)
 
 
@@ -143,7 +143,9 @@ net = Detector(
     vote_factor=FLAGS.vote_factor,
     sampling=FLAGS.cluster_sampling,
 )
+print("Moving to device")
 net.to(device)
+print("Move successful")
 criterion = MODEL.get_loss
 
 # Load the Adam optimizer
@@ -174,10 +176,12 @@ CONFIG_DICT = {
 def evaluate_one_epoch():
     stat_dict = {}
     ap_calculator_list = [APCalculator(iou_thresh, DATASET_CONFIG.class2type) for iou_thresh in AP_IOU_THRESHOLDS]
+    print("Starting eval")
     net.eval()  # set model to eval mode (for bn and dp)
+    print("Eval finished")
     for batch_idx, batch_data_label in enumerate(TEST_DATALOADER):
-        if batch_idx % 10 == 0:
-            print("Eval batch: %d" % (batch_idx))
+        # if batch_idx % 1 == 0:
+        print("Eval batch: %d" % (batch_idx))
         for key in batch_data_label:
             batch_data_label[key] = batch_data_label[key].to(device)
 
@@ -205,8 +209,8 @@ def evaluate_one_epoch():
             ap_calculator.step(batch_pred_map_cls, batch_gt_map_cls)
 
         # Dump evaluation results for visualization
-        if batch_idx == 0:
-            MODEL.dump_results(end_points, DUMP_DIR, DATASET_CONFIG)
+        # if batch_idx == 0:
+        #     MODEL.dump_results(end_points, DUMP_DIR, DATASET_CONFIG)
 
     # Log statistics
     for key in sorted(stat_dict.keys()):

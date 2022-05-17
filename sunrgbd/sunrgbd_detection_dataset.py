@@ -69,15 +69,15 @@ class SunrgbdDetectionVotesDataset(Dataset):
             # self.data_path = os.path.join(ROOT_DIR, "%s_%s" % (data_path, split_set))
 
             # MATEJA - v2 - train iz drugog foldera
-            data_path = "/media/mateja/ubuntu_storage/Datasets/Votenet_empty_volumes/Dataset_220322_train_val_eval/pc_bbox_votes_50k"
+            data_path = "/votenet/shapenet/pc_bbox_votes_50k"
             self.data_path = "%s_%s" % (data_path, split_set)
 
             # MATEJA - "EVAL" PROBA IZ DRUGOG FOLDERA
-            if split_set == "eval":
-                # self.data_path ='/media/mateja/ubuntu_storage/Datasets/Votenet_empty_volumes/Dataset_220322_train_val_eval/pc_bbox_votes_50k_eval'
-                # self.data_path ='/media/mateja/ubuntu_storage/Datasets/Votenet_empty_volumes/Dataset_220322_per_class/negative_cabinet_sample'
-                self.data_path = "/media/mateja/ubuntu_storage/Datasets/KINECT/test_dataset"
-                # self.data_path = "/home/mateja/Desktop/Votenet_test/real_scene_eval_test"
+            # if split_set == "eval":
+            # self.data_path ='/media/mateja/ubuntu_storage/Datasets/Votenet_empty_volumes/Dataset_220322_train_val_eval/pc_bbox_votes_50k_eval'
+            # self.data_path ='/media/mateja/ubuntu_storage/Datasets/Votenet_empty_volumes/Dataset_220322_per_class/negative_cabinet_sample'
+            # self.data_path = "/media/mateja/ubuntu_storage/Datasets/KINECT/test_dataset"
+            # self.data_path = "/home/mateja/Desktop/Votenet_test/real_scene_eval_test"
 
             # COMMENTED - MATEJA
             # self.raw_data_path = os.path.join(ROOT_DIR, "shapenet/shapenet_trainval")
@@ -269,7 +269,7 @@ class SunrgbdDetectionVotesDataset(Dataset):
 
 
 def viz_votes(pc, point_votes, point_votes_mask):
-    """ Visualize point votes and point votes mask labels
+    """Visualize point votes and point votes mask labels
     pc: (N,3 or 6), point_votes: (N,9), point_votes_mask: (N,)
     """
     inds = point_votes_mask == 1
@@ -284,7 +284,7 @@ def viz_votes(pc, point_votes, point_votes_mask):
 
 
 def viz_obb(pc, label, mask, angle_classes, angle_residuals, size_classes, size_residuals):
-    """ Visualize oriented bounding box ground truth
+    """Visualize oriented bounding box ground truth
     pc: (N,3)
     label: (K,3)  K == MAX_NUM_OBJ
     mask: (K,)
@@ -311,7 +311,7 @@ def viz_obb(pc, label, mask, angle_classes, angle_residuals, size_classes, size_
 
 
 def get_sem_cls_statistics():
-    """ Compute number of objects for each semantic class """
+    """Compute number of objects for each semantic class"""
     d = SunrgbdDetectionVotesDataset(use_height=True, use_color=True, use_v1=True, augment=True)
     sem_cls_cnt = {}
     for i in range(len(d)):
@@ -345,4 +345,3 @@ if __name__ == "__main__":
         sample["size_class_label"],
         sample["size_residual_label"],
     )
-

@@ -1,0 +1,27 @@
+name: "Evaluate Dataset"
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  evaluate:
+    if: ${{ github.event.label.name == 'evaluate' }}
+    runs-on: self-hosted
+    name: Dataset evaluation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build docker image
+        run: docker build --file docker/Dockerfile --tag votenet:v1  .
+
+      - name: Remove already existing containers if there are any
+        run: if $(docker container ls -a | grep votenet_v1); then echo "No container found"; else docker rm -f votenet_v1; fi
+
+      - name: Run dataset evaluation
+        run: |
+          docker run --gpus all --cpus="8" --shm-size=16gb --runtime=nvidia \
+            --volume="/mnt/d/pc_bbox_votes_50k_eval/:/votenet/shapenet/pc_bbox_votes_50k_eval/" \
+            --workdir="/votenet/" \
+            --name=votenet_v1 votenet:v1
